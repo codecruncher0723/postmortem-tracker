@@ -1,67 +1,98 @@
-PostMortem Tracker
-A high-performance, enterprise-grade Incident and Root-Cause Analysis (RCA) tracker. Designed for engineers who believe in "Extreme Ownership" and need to document, track, and resolve system failures with precision.
+📊 PostMortem Tracker
+
+A high-performance, enterprise-grade Incident and Root Cause Analysis (RCA) tracker.
+
+Built for engineers who value Extreme Ownership and need a structured way to document, track, and resolve system failures with clarity and precision.
 
 🚀 Features
-Extreme Accountability: Track incidents from detection to resolution with clear severity levels.
 
-Real-time Analytics: Automated dashboard metrics to monitor critical system fires.
+🔴 Incident Tracking
+Track incidents from detection to resolution with severity levels and timestamps.
 
-Search & Sort: Instant filtering across your incident database as you type.
+📊 Real-time Analytics
+Automatic dashboard metrics to monitor system health and critical failures.
 
-Data Portability: Seamlessly export your entire incident history to JSON and import it to new environments.
+🔎 Smart Search
+Instant filtering and search across all incidents.
 
-Event-Driven Architecture: Highly performant UI using Event Delegation and modern Web APIs.
+💾 Data Portability
+Export and import full incident history using JSON.
 
-Type-Safe Foundation: Built with strictly typed TypeScript to ensure zero-runtime data corruption.
+⚡ Event-Driven UI
+Optimized UI using native DOM APIs and event delegation.
 
-🛠️ Tech Stack
+🧠 Type Safety First
+Built with strict TypeScript for reliable, predictable behavior.
+
+🛠 Tech Stack
 Language: TypeScript
-
 Build Tool: Vite
-
-Logic: Native DOM API, Web Storage API (localStorage)
-
-Architecture: Layered Architecture (Models, Services, Components, Utils)
-
+Storage: LocalStorage (Web Storage API)
+Architecture: Layered Architecture (MVC-inspired separation)
+Models
+Services
+Components
+Utils
 📦 Getting Started
 Prerequisites
-Node.js (v18 or higher recommended)
-
+Node.js (v18+ recommended)
 npm (comes with Node.js)
 
-Installation
-Clone the repository:
-
-Bash
+🔧 Installation
+1. Clone the repository
 git clone https://github.com/codecruncher0723/postmortem-tracker.git
-Navigate into your project folder:
 
-Bash
+2. Navigate to project
 cd postmortem-tracker/Project
-Install dependencies:
 
-Bash
+3. Install dependencies
 npm install
-Start the development server:
 
-Bash
+4. Start development server
 npm run dev
-Open your browser to the URL provided in the terminal (usually http://localhost:5173).
 
-📁 Project Structure
-Plaintext
+5. Open in browser
+Visit:
+http://localhost:5173
+
 Project/
+├── public/                # Static assets
 ├── src/
-│   ├── components/      # UI components (Incident cards, etc.)
-│   ├── models/          # TypeScript Interfaces and Types
-│   ├── services/        # Business logic & Data Persistence
-│   ├── utils/           # Helper functions (Analytics, Factories)
-│   ├── main.ts          # Application entry point
-│   └── styles/          # Global styles
-├── package.json         # Project metadata and dependencies
-└── tsconfig.json        # TypeScript configuration
+│   ├── components/       # UI components (Incident cards, dashboard UI)
+│   ├── models/           # TypeScript interfaces & types
+│   ├── services/         # Business logic + localStorage handling
+│   ├── utils/            # Helper functions (analytics, factories)
+│   ├── styles/           # Global styles
+│   └── main.ts           # Application entry point
+│
+├── index.html            # App root HTML
+├── vite.config.ts        # Vite configuration
+├── tsconfig.json         # TypeScript config
+├── package.json          # Dependencies & scripts
+└── dist/                 # Production build output (auto-generated)
+
 🧠 Engineering Philosophy
-This project was built following the Single Responsibility Principle (SRP) and Layered Architecture. By decoupling business logic from the UI, the application remains scalable and framework-agnostic.
+
+This project follows:
+
+Single Responsibility Principle (SRP)
+Layered Architecture
+Separation of Concerns
+Framework-agnostic design
+
+Business logic is fully decoupled from UI components to ensure scalability and maintainability.
+
+📦 Build for Production
+npm run build
+
+Output will be generated in:
+dist/
+
+🌐 Deployment (GitHub Pages)
+npm run deploy
+
+Make sure vite.config.ts contains:
+base: '/postmortem-tracker/'
 
 📝 License
-This project is open-source and available for educational purposes.
+This project is open-source and intended for educational use.
