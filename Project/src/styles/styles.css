@@ -1,0 +1,622 @@
+/* =============================================================
+   PostMortem Tracker — Dark Mode Design System
+   Cyberpunk-inflected, restrained. Severity-coded, data-dense.
+   ============================================================= */
+
+/* ---- Font loading ----------------------------------------------------
+   Montserrat is loaded via the Google Fonts <link> tags in index.html
+   (with preconnect) rather than self-hosted. This build environment
+   couldn't reach fonts.gstatic.com to download the actual woff2 files,
+   so the CDN link is the working default.
+
+   To self-host later (recommended for production):
+   1. Download Montserrat woff2 weights 400/500/600/700/800/900
+   2. Place them in /public/fonts/
+   3. Uncomment the @font-face blocks below
+   4. Remove the two Google Fonts <link> tags from index.html
+------------------------------------------------------------------------- */
+
+/*
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-800.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+
+/* ---- Design tokens ----------------------------------------------------- */
+:root {
+  /* Backgrounds */
+  --bg-void: #0a0a0b;
+  --bg-surface: #131315;
+  --bg-surface-raised: #18181b;
+  --bg-surface-glass: rgba(255, 255, 255, 0.035);
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Text */
+  --text-primary: #ececef;
+  --text-secondary: #9c9ca6;
+  --text-tertiary: #6c6c76;
+
+  /* Accent — restrained violet, used sparingly for focus/primary actions */
+  --accent: #8b6bff;
+  --accent-soft: rgba(139, 107, 255, 0.16);
+  --accent-glow: rgba(139, 107, 255, 0.35);
+
+  /* Severity system */
+  --sev-critical: #ff3b4e;
+  --sev-critical-glow: rgba(255, 59, 78, 0.45);
+  --sev-high: #ff9f43;
+  --sev-high-glow: rgba(255, 159, 67, 0.32);
+  --sev-medium: #2dd4bf;
+  --sev-medium-glow: rgba(45, 212, 191, 0.28);
+  --sev-low: #7c8797;
+  --sev-low-glow: rgba(124, 135, 151, 0.22);
+
+  /* Status */
+  --status-resolved: #34d399;
+  --status-open: #9c9ca6;
+
+  /* Type scale */
+  --font-body: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.85rem;
+  --fs-base: 0.95rem;
+  --fs-md: 1.05rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.75rem;
+  --fs-2xl: 2.25rem;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  /* Motion */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+
+  /* Layout */
+  --content-max-width: 880px;
+}
+
+/* ---- Reset --------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { color-scheme: dark; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(139, 107, 255, 0.06), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(255, 59, 78, 0.04), transparent 40%),
+    var(--bg-void);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--fs-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  color: var(--text-primary);
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+p { margin: 0; }
+button { font-family: inherit; }
+
+/* Visible keyboard focus everywhere, not just inputs */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---- Layout shell --------------------------------------------------------- */
+.app-shell {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.app-header h1 {
+  font-size: var(--fs-2xl);
+  font-weight: 900;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.search-field { flex: 1 1 260px; }
+
+.dashboard-shell { min-height: 120px; }
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.form-shell {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.app-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-3);
+}
+
+/* ---- Metrics / critical count pill ---------------------------------------- */
+.metrics-line {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.critical-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.75em;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(255, 59, 78, 0.12);
+  border: 1px solid rgba(255, 59, 78, 0.4);
+  color: var(--sev-critical);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  box-shadow: 0 0 12px var(--sev-critical-glow);
+  transition: box-shadow var(--transition-base);
+}
+
+/* ---- Inputs ---------------------------------------------------------------- */
+input[type="text"],
+input[type="search"],
+textarea,
+select {
+  width: 100%;
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: 400;
+  outline: none;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+input[type="text"]::placeholder,
+input[type="search"]::placeholder,
+textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+input[type="text"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+textarea { min-height: 100px; resize: vertical; }
+
+input[type="file"] {
+  width: 100%;
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+}
+
+input[type="file"]::file-selector-button {
+  background: var(--bg-surface-raised);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  margin-right: var(--space-3);
+  cursor: pointer;
+  transition: border-color var(--transition-base), background var(--transition-base);
+}
+
+input[type="file"]::file-selector-button:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* ---- Form ------------------------------------------------------------------ */
+.incident-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-group label {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-group-file {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* ---- Buttons ---------------------------------------------------------------- */
+#add-incident-btn,
+#export-btn,
+.incident-form button[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--fs-base);
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform var(--transition-fast), box-shadow var(--transition-base),
+              border-color var(--transition-base), background var(--transition-base),
+              color var(--transition-base);
+}
+
+#add-incident-btn,
+.incident-form button[type="submit"] {
+  background: var(--accent);
+  color: #100a1f;
+}
+
+#add-incident-btn:hover,
+.incident-form button[type="submit"]:hover {
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+#add-incident-btn:active,
+.incident-form button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+#export-btn {
+  background: transparent;
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+#export-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Small ghost-style action buttons on incident cards */
+.incident-card-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: border-color var(--transition-base), color var(--transition-base), background var(--transition-base);
+}
+
+.btn-icon:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.btn-icon-danger:hover {
+  border-color: var(--sev-critical);
+  color: var(--sev-critical);
+  background: rgba(255, 59, 78, 0.1);
+}
+
+/* ---- Incident cards --------------------------------------------------------- */
+.incident-card {
+  position: relative;
+  background: var(--bg-surface-glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--sev-low);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base), opacity var(--transition-base);
+}
+
+.incident-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.incident-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.incident-title {
+  font-size: var(--fs-lg);
+  font-weight: 800;
+}
+
+.incident-description {
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-size: var(--fs-base);
+}
+
+.incident-meta {
+  color: var(--text-tertiary);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+}
+
+.incident-badges {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+/* Severity badges */
+.severity-critical {
+  color: var(--sev-critical);
+  background: rgba(255, 59, 78, 0.1);
+  border-color: rgba(255, 59, 78, 0.4);
+  box-shadow: 0 0 10px var(--sev-critical-glow);
+}
+
+.severity-high {
+  color: var(--sev-high);
+  background: rgba(255, 159, 67, 0.1);
+  border-color: rgba(255, 159, 67, 0.35);
+}
+
+.severity-medium {
+  color: var(--sev-medium);
+  background: rgba(45, 212, 191, 0.1);
+  border-color: rgba(45, 212, 191, 0.35);
+}
+
+.severity-low {
+  color: var(--sev-low);
+  background: rgba(124, 135, 151, 0.1);
+  border-color: rgba(124, 135, 151, 0.3);
+}
+
+/* Status badges */
+.status-open {
+  color: var(--status-open);
+  background: rgba(156, 156, 166, 0.08);
+  border-color: var(--border-strong);
+}
+
+.status-resolved {
+  color: var(--status-resolved);
+  background: rgba(52, 211, 153, 0.1);
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+/* Card data attributes styling */
+.incident-card[data-severity="critical"] {
+  border-left-color: var(--sev-critical);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 22px -6px var(--sev-critical-glow);
+}
+
+.incident-card[data-severity="high"] {
+  border-left-color: var(--sev-high);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 18px -8px var(--sev-high-glow);
+}
+
+.incident-card[data-severity="medium"] { border-left-color: var(--sev-medium); }
+.incident-card[data-severity="low"] { border-left-color: var(--sev-low); }
+.incident-card[data-status="resolved"] { opacity: 0.72; }
+
+/* ---- Reduced motion ---------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- Unified Responsive System ----------------------------------------------- */
+
+/* Tablets and Mobile Devices */
+@media (max-width: 768px) {
+  :root {
+    /* Set to 16px to explicitly prevent iOS Safari auto-zooming on input focus */
+    --fs-base: 1rem; 
+    --fs-sm: 0.875rem;
+    --fs-xs: 0.8rem;
+    
+    /* Slightly compress layout spacing tokens */
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-7: 32px;
+    --space-8: 48px;
+  }
+
+  .app-shell {
+    padding: var(--space-5) var(--space-4) var(--space-6);
+    gap: var(--space-5);
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-4);
+  }
+
+  .app-header h1 {
+    font-size: var(--fs-xl);
+    text-align: center;
+  }
+
+  .metrics-line {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .search-field {
+    flex: none;
+    width: 100%;
+  }
+
+  /* Full-width touch-optimized blocks for actions */
+  #add-incident-btn,
+  #export-btn,
+  .incident-form button[type="submit"] {
+    width: 100%;
+    padding: var(--space-3);
+    min-height: 44px; /* Matches mobile standard interactive targets */
+  }
+
+  .form-shell,
+  .incident-card {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+  }
+
+  /* Stretch action tools on small screens cleanly */
+  .incident-card-actions {
+    flex-direction: column;
+    gap: var(--space-2);
+    width: 100%;
+    margin-top: var(--space-2);
+  }
+
+  .btn-icon {
+    width: 100%;
+    justify-content: center;
+    padding: var(--space-2);
+    min-height: 40px;
+  }
+
+  .app-footer {
+    justify-content: center;
+  }
+}
+
+/* Very Small Screen Handling (Small Smartphones) */
+@media (max-width: 400px) {
+  :root {
+    --fs-2xl: 1.5rem;
+    --fs-xl: 1.25rem;
+    --fs-lg: 1.1rem;
+  }
+  
+  .app-shell {
+    padding: var(--space-4) var(--space-3) var(--space-5);
+  }
+
+  .badge {
+    width: 100%;
+    justify-content: center;
+    padding: 4px 8px;
+  }
+}
