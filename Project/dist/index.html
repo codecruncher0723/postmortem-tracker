@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostMortem Tracker</title>
+
+    <!-- Montserrat: loaded via Google Fonts CDN with preconnect to minimize
+         render-blocking. See summary notes for why this isn't self-hosted. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script type="module" crossorigin src="/assets/index-DJNFoO6N.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-VlYDeNa-.css">
+</head>
+<body>
+    <div class="app-shell">
+
+        <header class="app-header">
+            <h1>PostMortem Tracker</h1>
+            <div class="metrics">
+                <p class="metrics-line">Critical Fires: <span id="critical-count" class="critical-count">0</span></p>
+            </div>
+        </header>
+
+        <div class="toolbar">
+            <div class="search-field">
+                <input type="search" id="search-input" placeholder="Search incidents...">
+            </div>
+            <button id="add-incident-btn">Add Incident</button>
+        </div>
+
+        <main class="dashboard-shell">
+            <div id="dashboard-container" class="dashboard-container">
+            </div>
+        </main>
+
+        <section class="form-shell">
+            <form action="#" id="incident-form" class="incident-form">
+
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" />
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="severity">Severity</label>
+                    <select id="severity" name="severity">
+                        <option value="LOW">Low</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="HIGH">High</option>
+                        <option value="CRITICAL">Critical</option>
+                    </select>
+                </div>
+
+                <button type="submit">Submit</button>
+
+                <div class="form-group form-group-file">
+                    <input type="file" id="import-file" accept=".json" />
+                </div>
+
+            </form>
+        </section>
+
+        <footer class="app-footer">
+            <button type="submit" id="export-btn">Export your data</button>
+        </footer>
+
+    </div>
+
+</body>
+</html>
