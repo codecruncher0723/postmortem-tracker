@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     // This tells Vite to output the build files to a 'docs' folder 
     // located at the root of your repository (PostMortem/docs)
-    outDir: '../docs', 
+    outDir: 'docs', 
     emptyOutDir: true,
   },
 });
