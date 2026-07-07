@@ -107,8 +107,14 @@
         const target = event.target as HTMLInputElement;
         const file = target.files?.[0];
         if(!file) return;
+        // Check if the file name ends with .json or if the browser recognizes it as JSON
+        if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+            alert('Error: You can only upload valid .json files!');
+            target.value = ''; // Reset the file input so they can try again
+            return; // Stop the function completely
+        }
+        
         const reader = new FileReader();
-
         reader.onload = (e: ProgressEvent<FileReader>) => {
             const jsonString = e.target?.result as string;
             // We have the text! Now we need a method to handle it.
