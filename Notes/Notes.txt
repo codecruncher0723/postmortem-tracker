@@ -1,0 +1,95 @@
+🚀 PostMortem: Project Architecture & Study Notes
+Project Goal: Build an enterprise-quality Root-Cause & Incident Tracker to practice extreme ownership over failures (e.g., Apps Script crashes, missed deadlines, or late train commutes).
+Tech Stack: Vanilla TypeScript, Vite, HTML, CSS.
+
+🏗️ Core Engineering Principles Applied
+Separation of Concerns (SoC): Splitting the app into strict folders (models/, services/, components/, utils/). The UI never talks directly to the database; it goes through a Service.
+
+Single Responsibility Principle (SRP): Every file does exactly one thing (e.g., incidentFactory.ts only creates objects; IncidentCard.ts only renders HTML).
+
+DRY (Don't Repeat Yourself): Using Generics (<T>) and Utility Types (Omit, Pick) to avoid writing the same code twice.
+
+Immutability: Never modifying original arrays (using [...array] or .map()) to prevent unpredictable UI bugs.
+
+📂 Phase 1: Domain Modeling & Factories
+Goal: Define the exact blueprint of our data before writing any UI.
+
+Union Types (type): Used to lock down variables to specific strings.
+
+Example: type Severity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'; prevents spelling mistakes and bad data.
+
+Interfaces (interface): Created the strict Incident contract to guarantee the shape of our objects.
+
+Optional Properties (?): Used for data that might not exist yet (e.g., resolvedAt?: Date;).
+
+The Factory Pattern: Built createIncident() in utils/ to centralize ID generation (crypto.randomUUID()) and default values (status: 'OPEN').
+
+💾 Phase 2: Data Persistence & Services
+Goal: Save data to the browser securely while handling TypeScript's runtime blindspots.
+
+Classes & OOP: Built a GenericStorage<T> class to encapsulate all localStorage logic.
+
+Access Modifiers (private readonly): Protected internal variables like the storage key from being changed accidentally by other files.
+
+Generics (<T>): Allowed our storage service to save any type of data, not just Incidents.
+
+The JSON Date Trap: Learned that JSON.parse() destroys JavaScript Date objects, turning them into plain strings. We fixed this by passing a custom parsing function into our Generic Storage constructor to revive the dates.
+
+🖥️ Phase 3: DOM Manipulation & Components
+Goal: Connect the TypeScript logic to the HTML interface safely.
+
+DOM Type Casting: Used as HTMLInputElement or as HTMLFormElement to tell TS exactly what kind of HTML element we queried, unlocking specific properties like .value or .reset().
+
+Type Guards: Always writing if (!element) throw new Error(...) immediately after querying the DOM to prove to TS that the element is not null.
+
+FormData API: Used new FormData(target) on the SubmitEvent to extract all user inputs cleanly instead of querying 5 different input boxes manually.
+
+Event preventDefault(): Stopped the browser from refreshing the page when the form was submitted.
+
+UI Components: Built renderIncidentCard() using Template Literals (`) to dynamically generate HTML strings injected via innerHTML.
+
+📊 Phase 4: Analytics & Array Methods
+Goal: Derive real-time dashboard metrics (UI State) from our database (Persistent State).
+
+.filter(): Used to shrink an array down to only items matching a condition (e.g., counting CRITICAL incidents).
+
+.reduce(): The most powerful array method. Used to loop through an array exactly once (O(n) time complexity) to build a grouped object (the Severity Tally).
+
+Record<K, V>: A TypeScript Utility Type used to strictly type the tally object (e.g., Record<Severity, number>).
+
+📁 Phase 5: File APIs (Export / Import)
+Goal: Allow users to download their data and upload it on other machines.
+
+The Blob API: Converted our JSON string into a binary file (new Blob(...)) and created a temporary download URL.
+
+Memory Management: Used URL.revokeObjectURL() to clean up the browser's RAM after the download.
+
+FileReader API: Broke through the browser security sandbox to read a user-uploaded .json file asynchronously via the onload event.
+
+Defensive Programming: Wrapped JSON.parse() in a try...catch block to prevent corrupted uploaded files from crashing the application.
+
+🔍 Phase 6: Search, Sort & Event Delegation
+Goal: Make the UI interactive and highly performant.
+
+The 'input' Event: Used for the search bar to trigger UI updates on every single keystroke.
+
+Array Immutability & Sorting: Learned that .sort() dangerously mutates the original array. Protected our data by spreading it first: [...filteredIncidents].sort(...).
+
+Date Math: Used .getTime() to convert dates to numbers so they could be subtracted for descending sorts.
+
+Event Delegation: Instead of putting 500 "click" listeners on 500 Delete buttons, we put ONE listener on the parent container.
+
+DOM Traversal: Used target.matches('.delete-btn') to catch the click, and .closest('.incident-card') to find the parent HTML card.
+
+Dataset (data-*): Used data-id="${incident.id}" in the HTML so our JavaScript could read card.dataset.id to know exactly which database item to delete.
+
+🎓 Phase 7: The Senior Refactor (Utility Types)
+Goal: Master advanced TypeScript types to keep the codebase DRY and maintainable.
+
+Partial<T>: Used in our updateItem method. It takes an interface and makes every property temporarily optional, allowing us to pass in small updates like { status: 'RESOLVED' } without needing the whole object.
+
+Object Merging: Used the spread operator to safely overwrite old properties with new ones: const updated = { ...oldItem, ...changes };.
+
+Omit<T, Keys>: Created a NewIncidentInput type by grabbing everything from Incident except the ID and dates.
+
+Pick<T, Keys>: Used to create highly specific, stripped-down types (like a dropdown menu item requiring only an ID and Title) from a massive master interface.
